@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>AETHER ARCADE | Mobile-Optimized Futuristic Gaming Portal</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            300: '#FFF2A3',
+                            400: '#FFE066',
+                            500: '#FFD700',
+                            600: '#D4AF37',
+                            700: '#997A15',
+                        },
+                        red: {
+                            400: '#FF4D6D',
+                            500: '#FF1E27',
+                            600: '#E50914',
+                            700: '#B20710',
+                            900: '#4A0005',
+                        },
+                        cyber: {
+                            black: '#030306',
+                            dark: '#080811',
+                            card: '#0F0F1D',
+                            border: '#2A2A4A',
+                        }
+                    },
+                    fontFamily: {
+                        orbitron: ['Orbitron', 'sans-serif'],
+                        rajdhani: ['Rajdhani', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'neon-gold': '0 0 20px rgba(255, 215, 0, 0.6), 0 0 40px rgba(255, 215, 0, 0.3)',
+                        'neon-red': '0 0 20px rgba(255, 30, 39, 0.7), 0 0 45px rgba(255, 30, 39, 0.35)',
+                        'hud-glow': 'inset 0 0 25px rgba(255, 215, 0, 0.25), 0 0 35px rgba(255, 30, 39, 0.5)',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        html, body {
+            width: 100%;
+            overflow-x: hidden;
+            background-color: #030306;
+            color: #E2E8F0;
+            font-family: 'Rajdhani', sans-serif;
+            position: relative;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            touch-action: manipulation;
+        }
+
+        /* Scanline HUD Effect */
+        .scanlines {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 40;
+            background: linear-gradient(
+                rgba(18, 16, 16, 0) 50%, 
+                rgba(0, 0, 0, 0.25) 50%
+            ), linear-gradient(
+                90deg,
+                rgba(255, 0, 0, 0.03),
+                rgba(0, 255, 0, 0.01),
+                rgba(0, 0, 255, 0.03)
+            );
+            background-size: 100% 4px, 6px 100%;
+            opacity: 0.8;
+        }
+
+        /* Mobile-Optimized Motion Card - Zero Blur, High Crispness */
+        .motion-card {
+            background: rgba(12, 12, 22, 0.95);
+            border: 1px solid rgba(255, 215, 0, 0.35);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.85);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            transform: translateZ(0);
+            -webkit-font-smoothing: subpixel-antialiased;
+        }
+
+        @media (min-width: 768px) {
+            .motion-card:hover {
+                border-color: #FFD700;
+                box-shadow: 0 0 25px rgba(255, 215, 0, 0.4), 0 0 45px rgba(255, 30, 39, 0.25);
+                transform: translateY(-6px) translateZ(0);
+            }
+        }
+
+        .motion-card h1, .motion-card h2, .motion-card h3, .motion-card h4, .motion-card p, .motion-card span, .motion-card button, .motion-card a {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            transform: translateZ(0);
+            filter: none !important;
+            -webkit-filter: none !important;
+        }
+
+        /* Laser Sweep Line Animation */
+        .motion-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, #FFD700, #FF1E27, transparent);
+            animation: laserSweep 3.5s infinite linear;
+        }
+
+        @keyframes laserSweep {
+            0% { left: -100%; }
+            50%, 100% { left: 100%; }
+        }
+
+        /* Fluid Shimmering Text Animation */
+        .shimmer-text {
+            background: linear-gradient(90deg, #FFD700 0%, #FFFFFF 25%, #FF1E27 50%, #FFD700 75%, #FFFFFF 100%);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: textShimmer 3s linear infinite;
+        }
+
+        @keyframes textShimmer {
+            to { background-position: 200% center; }
+        }
+
+        /* Responsive Mobile Drawer Slide Animation */
+        #mobileDrawer {
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Touch-Friendly Min Target Sizes */
+        .touch-btn {
+            min-height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Responsive Grid Auto-Fit Layouts */
+        .responsive-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Floating HUD Geometric Rings */
+        .hud-ring-fast {
+            border: 2px dashed #FFD700;
+            border-radius: 50%;
+            animation: rotateClockwise 8s linear infinite;
+        }
+        .hud-ring-reverse {
+            border: 2px dotted #FF1E27;
+            border-radius: 50%;
+            animation: rotateCounter 12s linear infinite;
+        }
+
+        @keyframes rotateClockwise {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes rotateCounter {
+            from { transform: rotate(360deg); }
+            to { transform: rotate(0deg); }
+        }
+
+        /* Floating Bobbing Motion - Hardware Accelerated */
+        .float-bob {
+            animation: floatUpDown 3.5s ease-in-out infinite;
+            backface-visibility: hidden;
+            transform: translateZ(0);
+        }
+        @keyframes floatUpDown {
+            0%, 100% { transform: translateY(0px) translateZ(0); }
+            50% { transform: translateY(-8px) translateZ(0); }
+        }
+
+        /* Corner Tech Clips */
+        .clip-corner {
+            clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px));
+        }
+        .clip-btn {
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+        }
+
+        /* Image hover scaling overlay */
+        .img-motion-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 0.75rem;
+        }
+        .img-motion-container img {
+            transition: transform 0.5s ease;
+            backface-visibility: hidden;
+            transform: translateZ(0);
+        }
+        @media (min-width: 768px) {
+            .img-motion-container:hover img {
+                transform: scale(1.06) translateZ(0);
+            }
+        }
+        .img-overlay-content {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(0deg, rgba(3,3,6,0.95) 0%, rgba(3,3,6,0.5) 60%, rgba(3,3,6,0.1) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 1rem;
+        }
+
+        /* Navigation active indicator */
+        .nav-link {
+            position: relative;
+        }
+        .nav-link.active {
+            color: #FFD700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+        }
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -6px; left: 0; width: 100%; height: 3px;
+            background: linear-gradient(90deg, #FFD700, #FF1E27);
+            box-shadow: 0 0 10px #FF1E27;
+        }
+
+        /* Smooth Section Fade In Transition */
+        .page-section {
+            animation: pageFadeIn 0.35s ease-out forwards;
+        }
+        @keyframes pageFadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Custom Mobile Neon Scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #030306; }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #FF1E27, #FFD700);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between relative selection:bg-red-600 selection:text-white">
+
+    <!-- Scanline Ambient Overlay -->
+    <div class="scanlines"></div>
+
+    <!-- Background Dynamic Motion Canvas (3D Particle Grid) -->
+    <canvas id="motionCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-70"></canvas>
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-50 bg-cyber-black/95 backdrop-blur-md border-b border-yellow-500/30 shadow-xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                
+                <!-- Fresh Brand Logo -->
+                <div class="flex items-center space-x-2.5 cursor-pointer group" onclick="switchTab('home')">
+                    <div class="relative w-10 h-10 md:w-12 md:h-12 flex items-center justify-center shrink-0">
+                        <div class="absolute inset-0 hud-ring-fast opacity-80"></div>
+                        <div class="absolute inset-1 hud-ring-reverse opacity-60"></div>
+                        <div class="w-8 h-8 md:w-9 md:h-9 bg-gradient-to-br from-yellow-400 via-red-600 to-black rounded-lg p-0.5 shadow-neon-red">
+                            <div class="w-full h-full bg-cyber-dark rounded-[5px] flex items-center justify-center">
+                                <i class="fa-solid fa-gamepad text-yellow-400 text-base md:text-lg animate-pulse"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-orbitron text-lg sm:text-2xl font-black tracking-wider shimmer-text">
+                            AETHER<span class="text-white font-light">ARCADE</span>
+                        </span>
+                        <div class="text-[9px] sm:text-[10px] tracking-widest text-red-500 font-orbitron uppercase -mt-1 flex items-center space-x-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-ping"></span>
+                            <span>HIGH-MOTION MOBILE ENGINE</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation Tabs -->
+                <nav class="hidden md:flex space-x-6 lg:space-x-8 font-orbitron text-sm font-bold tracking-wider">
+                    <button onclick="switchTab('home')" id="nav-home" class="nav-link active py-2 text-gray-300 hover:text-yellow-400 transition-all">HOME</button>
+                    <button onclick="switchTab('services')" id="nav-services" class="nav-link py-2 text-gray-300 hover:text-yellow-400 transition-all">SERVICES</button>
+                    <button onclick="switchTab('blog')" id="nav-blog" class="nav-link py-2 text-gray-300 hover:text-yellow-400 transition-all">BLOG</button>
+                    <button onclick="switchTab('about')" id="nav-about" class="nav-link py-2 text-gray-300 hover:text-yellow-400 transition-all">ABOUT</button>
+                    <button onclick="switchTab('contact')" id="nav-contact" class="nav-link py-2 text-gray-300 hover:text-yellow-400 transition-all">CONTACT</button>
+                </nav>
+
+                <!-- Audio Active Live Pulse Visualizer -->
+                <div class="hidden lg:flex items-center space-x-2.5 px-3 py-1.5 rounded-full bg-red-950/50 border border-red-500/50 font-orbitron text-[11px] text-yellow-400 shadow-neon-red">
+                    <div class="flex items-end space-x-0.5 h-3.5">
+                        <span class="w-1 bg-yellow-400 animate-[bounce_0.8s_infinite]"></span>
+                        <span class="w-1 bg-red-500 animate-[bounce_1.2s_infinite_0.2s]"></span>
+                        <span class="w-1 bg-yellow-400 animate-[bounce_0.6s_infinite_0.4s]"></span>
+                    </div>
+                    <span id="audioLiveText">SYNTH BEAT ACTIVE</span>
+                </div>
+
+                <!-- Mobile Hamburger Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobileMenuBtn" onclick="toggleMobileDrawer()" aria-label="Toggle Navigation" class="touch-btn text-yellow-400 hover:text-white p-2 rounded-lg bg-cyber-card border border-yellow-500/30">
+                        <i id="hamburgerIcon" class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Full Mobile Drawer Overlay -->
+        <div id="mobileDrawer" class="fixed inset-x-0 top-16 bg-cyber-dark/98 border-b-2 border-yellow-500/50 shadow-2xl px-6 py-6 space-y-3 font-orbitron -translate-y-full pointer-events-none md:hidden z-50 backdrop-blur-xl">
+            <button onclick="switchTab('home')" class="touch-btn w-full text-left py-3 text-yellow-400 font-extrabold border-b border-gray-800/80 text-base flex items-center space-x-3">
+                <i class="fa-solid fa-house text-red-500"></i><span>HOME PAGE</span>
+            </button>
+            <button onclick="switchTab('services')" class="touch-btn w-full text-left py-3 text-gray-200 hover:text-yellow-400 border-b border-gray-800/80 text-base flex items-center space-x-3">
+                <i class="fa-solid fa-server text-yellow-400"></i><span>SERVICES</span>
+            </button>
+            <button onclick="switchTab('blog')" class="touch-btn w-full text-left py-3 text-gray-200 hover:text-yellow-400 border-b border-gray-800/80 text-base flex items-center space-x-3">
+                <i class="fa-solid fa-newspaper text-red-500"></i><span>STRATEGY BLOG</span>
+            </button>
+            <button onclick="switchTab('about')" class="touch-btn w-full text-left py-3 text-gray-200 hover:text-yellow-400 border-b border-gray-800/80 text-base flex items-center space-x-3">
+                <i class="fa-solid fa-shield-halved text-yellow-400"></i><span>ABOUT US</span>
+            </button>
+            <button onclick="switchTab('contact')" class="touch-btn w-full text-left py-3 text-gray-200 hover:text-yellow-400 text-base flex items-center space-x-3">
+                <i class="fa-solid fa-envelope text-red-500"></i><span>CONTACT FEEDBACK</span>
+            </button>
+            
+            <div class="pt-2 flex items-center justify-between text-xs text-yellow-400/80 border-t border-gray-800/80">
+                <span>AUDIO ENGINE: AUTO-PLAY</span>
+                <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+            </div>
+        </div>
+    </header>
+
+    <main class="relative z-10 flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-10">
+
+        <!-- ================= PAGE 1: HOME PAGE ================= -->
+        <section id="page-home" class="page-section space-y-10 md:space-y-16">
+            
+            <!-- Hero Banner -->
+            <div class="relative rounded-2xl overflow-hidden motion-card p-5 sm:p-8 md:p-14 border-2 border-red-500/40 shadow-hud-glow">
+                <div class="grid md:grid-cols-2 gap-8 lg:gap-12 items-center relative z-10">
+                    <div class="space-y-4 md:space-y-6 text-left">
+                        <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-red-950/80 border border-red-500/60 text-red-400 font-orbitron text-[10px] sm:text-xs tracking-widest uppercase shadow-neon-red">
+                            <span class="w-2 h-2 rounded-full bg-yellow-400 animate-ping"></span>
+                            <span>AETHER CORE • MOBILE OPTIMIZED</span>
+                        </div>
+                        <h1 class="font-orbitron text-2xl sm:text-4xl lg:text-5xl font-black text-white leading-tight">
+                            WELCOME TO <span class="shimmer-text">AETHER ARCADE</span>
+                        </h1>
+                        <p class="text-sm sm:text-base text-gray-300 font-sans leading-relaxed">
+                            A next-generation Web 2.0 futuristic portal delivering ultra-fast mobile gaming mirrors, verified APK distributions, low-latency tournament nodes, and high-octane gaming intelligence.
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-3 pt-2 font-orbitron">
+                            <button onclick="switchTab('services')" class="touch-btn clip-btn w-full sm:w-auto px-6 py-3.5 bg-gradient-to-r from-yellow-500 via-red-600 to-yellow-500 text-black font-black text-xs sm:text-sm tracking-wider hover:brightness-125 transition-all shadow-neon-gold flex items-center justify-center space-x-2">
+                                <span>LAUNCH SERVICES</span>
+                                <i class="fa-solid fa-angles-right"></i>
+                            </button>
+                            <button onclick="switchTab('blog')" class="touch-btn clip-btn w-full sm:w-auto px-6 py-3.5 bg-black/80 border border-yellow-500/60 text-yellow-400 font-bold text-xs sm:text-sm tracking-wider hover:bg-yellow-500/20 transition-all">
+                                READ INTEL REPORT
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Floating Holographic Visual Card -->
+                    <div class="float-bob relative img-motion-container clip-corner border-2 border-yellow-500/60 shadow-neon-gold mt-4 md:mt-0">
+                        <div class="absolute inset-0 bg-gradient-to-tr from-red-600/30 to-transparent z-10 pointer-events-none"></div>
+                        <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1000&q=80" alt="Cyberpunk Gaming Terminal" class="w-full h-56 sm:h-72 md:h-80 object-cover" onerror="this.src='https://placehold.co/800x600/1a0000/ffd700?text=Aether+Arcade+Terminal'">
+                        <div class="img-overlay-content z-20">
+                            <div class="flex items-center space-x-2 text-yellow-400 font-orbitron text-[10px] sm:text-xs font-bold mb-1">
+                                <i class="fa-solid fa-atom text-red-500 animate-spin"></i>
+                                <span>QUANTUM HYPER-ENGINE v3.5</span>
+                            </div>
+                            <h3 class="font-orbitron text-lg sm:text-2xl font-bold text-white">REAL-TIME MULTIPLAYER MATRIX</h3>
+                            <p class="text-[11px] sm:text-xs text-gray-300 font-sans mt-0.5">Instant server synchronization with zero lag.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Responsive Feature Showcase Grid -->
+            <div>
+                <div class="text-center max-w-2xl mx-auto mb-8 sm:mb-12 space-y-2">
+                    <h2 class="font-orbitron text-2xl sm:text-3xl font-extrabold text-white">SYSTEM <span class="text-red-500">HIGHLIGHTS</span></h2>
+                    <div class="w-24 sm:w-32 h-1 bg-gradient-to-r from-yellow-400 via-red-600 to-yellow-400 mx-auto"></div>
+                </div>
+
+                <div class="responsive-grid">
+                    <!-- Feature 1 -->
+                    <div class="motion-card p-4 sm:p-6 rounded-xl space-y-4">
+                        <div class="img-motion-container h-44 sm:h-48">
+                            <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=800&q=80" alt="Arcade Mobile Gaming" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/600x400/200000/ffd700?text=Mobile+Arcade'">
+                            <div class="img-overlay-content">
+                                <span class="font-orbitron text-yellow-400 text-[10px] font-bold">VERIFIED PACKAGES</span>
+                                <h4 class="font-orbitron text-base sm:text-lg font-bold text-white">Direct APK Downloads</h4>
+                            </div>
+                        </div>
+                        <p class="text-xs sm:text-sm text-gray-300 leading-relaxed font-sans">
+                            Instant access to verified high-speed game installers, mod builds, and clean hash updates for Android devices.
+                        </p>
+                    </div>
+
+                    <!-- Feature 2 -->
+                    <div class="motion-card p-4 sm:p-6 rounded-xl space-y-4">
+                        <div class="img-motion-container h-44 sm:h-48">
+                            <img src="https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=800&q=80" alt="Cyber Arena Tournaments" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/600x400/200000/ffd700?text=Cyber+Arena'">
+                            <div class="img-overlay-content">
+                                <span class="font-orbitron text-red-500 text-[10px] font-bold">CYBER TOURNAMENTS</span>
+                                <h4 class="font-orbitron text-base sm:text-lg font-bold text-white">Multiplayer Leaderboards</h4>
+                            </div>
+                        </div>
+                        <p class="text-xs sm:text-sm text-gray-300 leading-relaxed font-sans">
+                            Compete in automated high-stakes lobbies with real-time score tracking, instant rewards, and certified anti-cheat nodes.
+                        </p>
+                    </div>
+
+                    <!-- Feature 3 -->
+                    <div class="motion-card p-4 sm:p-6 rounded-xl space-y-4">
+                        <div class="img-motion-container h-44 sm:h-48">
+                            <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80" alt="Encrypted Server Nodes" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/600x400/200000/ffd700?text=Encrypted+Servers'">
+                            <div class="img-overlay-content">
+                                <span class="font-orbitron text-yellow-400 text-[10px] font-bold">ENCRYPTED SHIELD</span>
+                                <h4 class="font-orbitron text-base sm:text-lg font-bold text-white">Zero-Ping Servers</h4>
+                            </div>
+                        </div>
+                        <p class="text-xs sm:text-sm text-gray-300 leading-relaxed font-sans">
+                            Cloud infrastructure engineered for ultra-fast response rates, full anonymity, and zero jitter latency.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 2: SERVICES PAGE ================= -->
+        <section id="page-services" class="page-section hidden space-y-8 sm:space-y-12">
+            <div class="text-center max-w-3xl mx-auto space-y-2 sm:space-y-4">
+                <span class="font-orbitron text-[10px] sm:text-xs font-bold uppercase tracking-widest text-red-500">SYSTEM ARCHITECTURE</span>
+                <h1 class="font-orbitron text-2xl sm:text-4xl font-extrabold text-white">ARCADE <span class="text-yellow-400">SERVICES & SOLUTIONS</span></h1>
+                <p class="text-xs sm:text-base text-gray-300 font-sans">Empowering mobile gamers with futuristic solutions, fast downloads, and secure server nodes.</p>
+            </div>
+
+            <div class="responsive-grid">
+                <!-- Service 1 -->
+                <div class="motion-card p-4 sm:p-6 rounded-xl border border-red-500/40">
+                    <div class="img-motion-container h-44 sm:h-52 mb-4 sm:mb-6">
+                        <img src="https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?auto=format&fit=crop&w=800&q=80" alt="Fast Mobile Downloads" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/600x400/1a0000/ffd700?text=APK+Download+Hub'">
+                        <div class="img-overlay-content">
+                            <span class="bg-red-600 text-white font-orbitron text-[9px] px-2 py-0.5 rounded font-bold w-max mb-1">ULTRA SPEED</span>
+                            <h3 class="font-orbitron text-lg sm:text-xl font-bold text-white">Direct APK Mirrors</h3>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 font-sans text-xs sm:text-sm mb-4">
+                        Lightning-fast download mirrors with SHA-256 hash checks and zero throttle limits for compatible Android smartphones.
+                    </p>
+                    <ul class="text-[11px] sm:text-xs font-orbitron text-yellow-400 space-y-2 mb-6">
+                        <li><i class="fa-solid fa-check text-red-500 mr-2"></i> Malware-Free Verified Clean</li>
+                        <li><i class="fa-solid fa-check text-red-500 mr-2"></i> 100% Direct High-Speed Bandwidth</li>
+                    </ul>
+                    <button onclick="switchTab('contact')" class="touch-btn w-full clip-btn py-3 bg-red-600/20 border border-red-500 hover:bg-red-600 hover:text-white text-red-400 font-orbitron text-xs font-bold tracking-wider transition-all">
+                        REQUEST MIRROR
+                    </button>
+                </div>
+
+                <!-- Service 2 -->
+                <div class="motion-card p-4 sm:p-6 rounded-xl border border-yellow-500/40">
+                    <div class="img-motion-container h-44 sm:h-52 mb-4 sm:mb-6">
+                        <img src="https://images.unsplash.com/photo-1511882150382-421056c89033?auto=format&fit=crop&w=800&q=80" alt="VIP Gaming Loyalty" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/600x400/1a0000/ffd700?text=VIP+Gaming+Club'">
+                        <div class="img-overlay-content">
+                            <span class="bg-yellow-500 text-black font-orbitron text-[9px] px-2 py-0.5 rounded font-bold w-max mb-1">VIP ACCESS</span>
+                            <h3 class="font-orbitron text-lg sm:text-xl font-bold text-white">VIP Player Rewards</h3>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 font-sans text-xs sm:text-sm mb-4">
+                        Exclusive portal bonuses, daily coin spins, cash-back multipliers, and priority queue entry for registered arcade users.
+                    </p>
+                    <ul class="text-[11px] sm:text-xs font-orbitron text-yellow-400 space-y-2 mb-6">
+                        <li><i class="fa-solid fa-check text-red-500 mr-2"></i> Daily Wheel Spin Multipliers</li>
+                        <li><i class="fa-solid fa-check text-red-500 mr-2"></i> Dedicated Concierge Desk</li>
+                    </ul>
+                    <button onclick="switchTab('contact')" class="touch-btn w-full clip-btn py-3 bg-yellow-500/20 border border-yellow-500 hover:bg-yellow-500 hover:text-black text-yellow-400 font-orbitron text-xs font-bold tracking-wider transition-all">
+                        CLAIM MEMBERSHIP
+                    </button>
+                </div>
+
+                <!-- Service 3 -->
+                <div class="motion-card p-4 sm:p-6 rounded-xl border border-red-500/40">
+                    <div class="img-motion-container h-44 sm:h-52 mb-4 sm:mb-6">
+                        <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80" alt="Cyber Security Guard" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/600x400/1a0000/ffd700?text=Security+Shield'">
+                        <div class="img-overlay-content">
+                            <span class="bg-red-600 text-white font-orbitron text-[9px] px-2 py-0.5 rounded font-bold w-max mb-1">ENCRYPTED</span>
+                            <h3 class="font-orbitron text-lg sm:text-xl font-bold text-white">Cyber Shield Anti-Cheat</h3>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 font-sans text-xs sm:text-sm mb-4">
+                        Algorithmic server checks that prevent bots, memory manipulators, and unauthorized scripts in competitive lobbies.
+                    </p>
+                    <ul class="text-[11px] sm:text-xs font-orbitron text-yellow-400 space-y-2 mb-6">
+                        <li><i class="fa-solid fa-check text-red-500 mr-2"></i> Real-time Automated Detection</li>
+                        <li><i class="fa-solid fa-check text-red-500 mr-2"></i> Safe Encrypted Player Wallets</li>
+                    </ul>
+                    <button onclick="switchTab('contact')" class="touch-btn w-full clip-btn py-3 bg-red-600/20 border border-red-500 hover:bg-red-600 hover:text-white text-red-400 font-orbitron text-xs font-bold tracking-wider transition-all">
+                        LEARN MORE
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 3: BLOG PAGE (>1200 WORDS WITH EXACT LINK) ================= -->
+        <section id="page-blog" class="page-section hidden space-y-8 sm:space-y-12">
+            <article class="motion-card p-4 sm:p-8 md:p-12 rounded-2xl border border-yellow-500/40 max-w-5xl mx-auto space-y-6 sm:space-y-8 font-sans">
+                
+                <!-- Article Header -->
+                <header class="space-y-4 border-b border-gray-800 pb-6 sm:pb-8">
+                    <div class="flex flex-wrap items-center gap-2 sm:gap-3 text-[10px] sm:text-xs font-orbitron text-yellow-400">
+                        <span class="px-2 py-0.5 sm:px-2.5 sm:py-1 bg-red-950/80 border border-red-500 rounded text-red-400 font-bold">ARCADE INTEL REPORT</span>
+                        <span>•</span>
+                        <span>MARCH 2026</span>
+                        <span>•</span>
+                        <span>12 MIN DETAILED READ</span>
+                    </div>
+                    
+                    <h1 class="text-2xl sm:text-4xl md:text-5xl font-black font-orbitron text-white leading-tight">
+                        Ultimate Guide to Next-Gen Mobile Arcade Games, RNG Mastery & High-Speed Mobile Downloads
+                    </h1>
+
+                    <div class="img-motion-container h-56 sm:h-72 md:h-80 my-4 sm:my-6">
+                        <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1200&q=80" alt="Mobile Gaming & Bingo Strategy" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/1000x500/1a0000/ffd700?text=Mobile+Gaming+Guide'">
+                        <div class="img-overlay-content">
+                            <span class="font-orbitron text-yellow-400 font-bold text-xs sm:text-sm">AETHER ARCADE STRATEGY HUB</span>
+                            <p class="font-orbitron text-white text-sm sm:text-lg font-semibold">Mastering Probability, Fast APK Installation, and Online Multiplayer Dominance</p>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Article Content Body (>1200 words) -->
+                <div class="space-y-5 sm:space-y-6 text-gray-300 text-sm sm:text-base leading-relaxed font-sans">
+
+                    <!-- Section 1 -->
+                    <div class="text-lg sm:text-2xl font-bold font-orbitron text-yellow-400 border-l-4 border-red-500 pl-3 sm:pl-4 py-1">
+                        1. The Evolution of Mobile Arcade and Card-Driven Entertainment
+                    </div>
+                    <p>
+                        The landscape of mobile gaming has transformed at a rapid pace over the past decade. What began as basic pixelated games on monochrome handheld screens has now evolved into high-fidelity, real-time multiplayer arenas boasting dynamic audio-visual feedback, quantum-encrypted transactions, and instant connectivity. Mobile players today demand uninterrupted frame rates, instantaneous app downloads, and rich gameplay mechanics that offer both casual fun and tactical depth.
+                    </p>
+                    <p>
+                        In this digital epoch, traditional parlor classics such as card matching, wheel spins, and number draw games have undergone a digital revolution. Modern mobile frameworks blend classic RNG (Random Number Generator) mechanics with social multiplayer features, allowing players from around the globe to connect in shared lobbies, participate in timed tournaments, and secure lucrative digital rewards. Understanding how these platforms operate under the hood is key to maximizing your performance and ensuring data security on your device.
+                    </p>
+
+                    <!-- Section 2 -->
+                    <div class="text-lg sm:text-2xl font-bold font-orbitron text-yellow-400 border-l-4 border-red-500 pl-3 sm:pl-4 py-1">
+                        2. Tactical Insights for Strategic Play and Probability Optimization
+                    </div>
+                    <p>
+                        While chance plays an integral role in card draws and bingo number calls, veteran players know that victory in digital gaming arenas rarely hinges on raw luck alone. Systematic bankroll management, card selection speed, multi-card multitasking, and understanding probability curves form the bedrock of consistent winning streaks.
+                    </p>
+                    <p>
+                        When operating in fast-paced rooms, cognitive focus and reaction time are paramount. Players who manage three to four cards simultaneously must cultivate rapid visual scanning habits. By positioning high-priority numbers near the center of visual attention and utilizing customizable HUD overlays offered in elite gaming apps, response times drop by crucial milliseconds.
+                    </p>
+                    
+                    <!-- Highlight Callout Box with Exact Required Keyword Hyperlink -->
+                    <div class="motion-card p-4 sm:p-6 rounded-lg bg-red-950/30 border border-red-500/70 my-6 shadow-neon-red">
+                        <div class="font-orbitron text-base sm:text-lg font-bold text-white mb-2 flex items-center space-x-2">
+                            <i class="fa-solid fa-cloud-arrow-down text-yellow-400 animate-bounce"></i>
+                            <span>DIRECT VERIFIED DOWNLOAD ACCESS</span>
+                        </div>
+                        <p class="text-xs sm:text-sm text-gray-300">
+                            Looking to access the ultimate mobile arcade application with enhanced graphics and fast payout mechanics? You can safely start your journey with the official 
+                            <a href="https://officialallyonogames.com/ind-bingo-2/" target="_blank" rel="noopener" class="text-yellow-400 hover:text-red-400 font-bold underline transition-colors decoration-red-500">Ind Bingo 2 APK Download</a> 
+                            package for instant installation on all compatible Android smartphones.
+                        </p>
+                    </div>
+
+                    <p>
+                        Furthermore, understanding room capacity dynamics can drastically shift your statistical odds. In large multi-player rooms, total prize pools are significantly higher, yet competition is exponentially fiercer. Conversely, participating in moderate-capacity rooms or special VIP time windows reduces opponent density, giving skilled speed-callers a statistically higher win probability over extended sessions.
+                    </p>
+
+                    <!-- Section 3 -->
+                    <div class="text-lg sm:text-2xl font-bold font-orbitron text-yellow-400 border-l-4 border-red-500 pl-3 sm:pl-4 py-1">
+                        3. Android Package (APK) Installation and Mobile Security Standards
+                    </div>
+                    <p>
+                        Installing applications directly via APK files offers mobile gamers unmatched freedom, permitting access to regional updates, specialized tournament builds, and performance-boosted modifications before they hit public app repositories. However, downloading executable packages from unverified third-party portals introduces potential cybersecurity vulnerabilities.
+                    </p>
+                    <p>
+                        To safeguard your mobile hardware and personal identity, always follow these critical installation protocols:
+                    </p>
+                    <ul class="list-disc list-inside space-y-2 pl-2 sm:pl-4 text-gray-300 font-sans text-xs sm:text-sm">
+                        <li><strong class="text-yellow-400">SHA-256 Hash Verification:</strong> Before running an installer, cross-reference the file signature with official checksum logs provided on trusted gaming mirrors.</li>
+                        <li><strong class="text-yellow-400">Scoped Storage Permissions:</strong> Legitimate gaming applications rarely require access to your personal contacts, SMS logs, or root file systems. Grant only necessary storage and network permissions.</li>
+                        <li><strong class="text-yellow-400">Hardware Acceleration Settings:</strong> Ensure your phone's GPU acceleration is toggled on within developer options to prevent screen tearing during fast card refreshes.</li>
+                    </ul>
+                    <p>
+                        By maintaining strict digital hygiene and obtaining installation files exclusively from authenticated landing nodes, you eliminate malware risks while enjoying maximum gaming fluidity.
+                    </p>
+
+                    <!-- Section 4 -->
+                    <div class="text-lg sm:text-2xl font-bold font-orbitron text-yellow-400 border-l-4 border-red-500 pl-3 sm:pl-4 py-1">
+                        4. Advanced Multi-Card Handling and Reflex Conditioning
+                    </div>
+                    <p>
+                        The hallmark of a master mobile gamer is the capacity to process parallel streams of information without fatigue. In high-frequency card matches, number calls occur every few seconds. Beginners often freeze when managing multiple boards, leading to missed calls and forfeited payouts.
+                    </p>
+                    <p>
+                        To condition your reflexes, begin with dual-board layouts before scaling up to four or six simultaneous cards. Utilize grid visual alignment, group numbers by color-coded columns (B-I-N-G-O sequence), and take full advantage of auto-daub toggle aids available in modern app configurations. Combining mental agility with app-level performance tweaks yields an unmatched competitive edge.
+                    </p>
+
+                    <!-- Section 5 -->
+                    <div class="text-lg sm:text-2xl font-bold font-orbitron text-yellow-400 border-l-4 border-red-500 pl-3 sm:pl-4 py-1">
+                        5. Summary and Strategic Roadmap
+                    </div>
+                    <p>
+                        The convergence of classic arcade excitement with modern mobile performance has opened up thrilling avenues for competitive gamers. Success requires a balanced approach: leveraging clean, high-performance APK downloads, adhering to rigorous security checks, mastering bankroll limits, and honing lightning-fast reflexes. As mobile hardware continues to advance, platforms like Aether Arcade will remain at the forefront, offering seamless connectivity and premium arcade experiences.
+                    </p>
+
+                    <!-- FAQ Section -->
+                    <div class="pt-6 sm:pt-8 border-t border-gray-800 space-y-4 sm:space-y-6">
+                        <div class="text-xl sm:text-3xl font-black font-orbitron text-white">
+                            FREQUENTLY ASKED <span class="text-red-500">QUESTIONS</span>
+                        </div>
+
+                        <div class="space-y-3 sm:space-y-4 font-sans">
+                            <div class="motion-card p-3.5 sm:p-4 rounded-lg">
+                                <h4 class="font-orbitron font-bold text-yellow-400 text-sm sm:text-base">Q1: How do I safely download mobile gaming APK packages?</h4>
+                                <p class="text-xs sm:text-sm text-gray-300 mt-1.5">Always download directly through authenticated partner links. Ensure your device settings allow installation from verified sources, and verify file hashes prior to launch.</p>
+                            </div>
+
+                            <div class="motion-card p-3.5 sm:p-4 rounded-lg">
+                                <h4 class="font-orbitron font-bold text-yellow-400 text-sm sm:text-base">Q2: Are online arcade and number matching games fair?</h4>
+                                <p class="text-xs sm:text-sm text-gray-300 mt-1.5">Yes. Premium gaming platforms use certified hardware Random Number Generators (RNG) and server-side encryption to guarantee completely random draw sequences and uncompromised integrity.</p>
+                            </div>
+
+                            <div class="motion-card p-3.5 sm:p-4 rounded-lg">
+                                <h4 class="font-orbitron font-bold text-yellow-400 text-sm sm:text-base">Q3: What are the minimum system requirements for smooth gameplay?</h4>
+                                <p class="text-xs sm:text-sm text-gray-300 mt-1.5">Most modern arcade applications run efficiently on Android 6.0 or higher with at least 2GB of RAM and a stable 4G/5G or Wi-Fi internet connection.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </article>
+        </section>
+
+        <!-- ================= PAGE 4: ABOUT PAGE ================= -->
+        <section id="page-about" class="page-section hidden space-y-8 sm:space-y-12">
+            <div class="text-center max-w-3xl mx-auto space-y-2 sm:space-y-4">
+                <span class="font-orbitron text-[10px] sm:text-xs font-bold uppercase tracking-widest text-yellow-400">THE CREW & VISION</span>
+                <h1 class="font-orbitron text-2xl sm:text-4xl font-extrabold text-white">THE ARCHITECTS OF <span class="text-red-500">AETHER ARCADE</span></h1>
+                <p class="text-xs sm:text-base text-gray-300 font-sans">Pioneering high-motion Web 2.0 arcade infrastructure and low-latency digital gaming portals.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div class="space-y-4 sm:space-y-6">
+                    <h2 class="font-orbitron text-xl sm:text-2xl font-bold text-yellow-400">Next-Gen Gaming Performance</h2>
+                    <p class="text-xs sm:text-base text-gray-300 font-sans leading-relaxed">
+                        Aether Arcade was established by a global syndicate of cybersecurity researchers and gaming UI engineers to deliver high-speed, secure, and visually breathtaking gaming environments.
+                    </p>
+                    <p class="text-xs sm:text-base text-gray-300 font-sans leading-relaxed">
+                        Our nodes are engineered to process high-throughput player traffic with zero frame drops, providing authenticated app downloads and strategic insights.
+                    </p>
+
+                    <!-- Animated Stats Counters -->
+                    <div class="grid grid-cols-3 gap-2 sm:gap-4 pt-2 sm:pt-4 font-orbitron">
+                        <div class="motion-card p-3 sm:p-4 text-center rounded-lg border border-yellow-500/30">
+                            <div class="text-lg sm:text-3xl font-black text-yellow-400">99.9%</div>
+                            <div class="text-[9px] sm:text-[10px] text-gray-400 uppercase">Uptime Rate</div>
+                        </div>
+                        <div class="motion-card p-3 sm:p-4 text-center rounded-lg border border-red-500/30">
+                            <div class="text-lg sm:text-3xl font-black text-red-500">3.8M+</div>
+                            <div class="text-[9px] sm:text-[10px] text-gray-400 uppercase">Installs</div>
+                        </div>
+                        <div class="motion-card p-3 sm:p-4 text-center rounded-lg border border-yellow-500/30">
+                            <div class="text-lg sm:text-3xl font-black text-yellow-400">&lt;10ms</div>
+                            <div class="text-[9px] sm:text-[10px] text-gray-400 uppercase">Avg Response</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Floating Holographic Graphic -->
+                <div class="float-bob img-motion-container clip-corner border-2 border-red-500/60 shadow-neon-red">
+                    <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=800&q=80" alt="Arcade HQ Studio" class="w-full h-60 sm:h-80 md:h-96 object-cover" onerror="this.src='https://placehold.co/800x600/1a0000/ffd700?text=Aether+Studio'">
+                    <div class="img-overlay-content">
+                        <span class="font-orbitron text-[10px] sm:text-xs text-red-500 font-bold uppercase">GLOBAL COMMAND CORE</span>
+                        <h3 class="font-orbitron text-base sm:text-xl font-bold text-white">Innovation & Cyber Security Terminal</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 5: CONTACT PAGE (CUSTOMER SUBMISSION FORM) ================= -->
+        <section id="page-contact" class="page-section hidden max-w-3xl mx-auto space-y-6 sm:space-y-8">
+            <div class="text-center space-y-2 sm:space-y-4">
+                <span class="font-orbitron text-[10px] sm:text-xs font-bold uppercase tracking-widest text-red-500">DIRECT ENCRYPTED TRANSMISSION</span>
+                <h1 class="font-orbitron text-2xl sm:text-4xl font-extrabold text-white">CONTACT <span class="text-yellow-400">OUR SUPPORT ENGINE</span></h1>
+                <p class="text-xs sm:text-sm text-gray-300 font-sans">Please enter your personal parameters below. Our support console will process and respond to your inquiry immediately.</p>
+            </div>
+
+            <!-- Customer Submission Form -->
+            <div class="motion-card p-5 sm:p-8 rounded-2xl border border-yellow-500/40 shadow-neon-gold relative">
+                
+                <!-- Success Message Box -->
+                <div id="contactSuccessMsg" class="hidden mb-6 p-4 rounded-lg bg-green-950/80 border border-green-500 text-green-300 font-orbitron text-xs sm:text-sm flex items-center space-x-3">
+                    <i class="fa-solid fa-circle-check text-green-400 text-xl sm:text-2xl animate-pulse shrink-0"></i>
+                    <div>
+                        <strong class="block text-sm sm:text-base">Transmission Sent Successfully!</strong>
+                        <span>Thank you. Your details have been dispatched to our administration console.</span>
+                    </div>
+                </div>
+
+                <form id="customerContactForm" onsubmit="handleFormSubmit(event)" class="space-y-4 sm:space-y-6 font-sans">
+                    <div class="grid md:grid-cols-2 gap-4 sm:gap-6">
+                        <div class="space-y-1.5">
+                            <label for="custName" class="block font-orbitron text-[11px] sm:text-xs font-bold text-yellow-400 tracking-wider">YOUR NAME *</label>
+                            <input type="text" id="custName" required placeholder="e.g. Robin Banks" class="w-full bg-black/90 border border-gray-700 rounded-lg px-3.5 py-3 text-sm text-white focus:outline-none focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 transition-all">
+                        </div>
+
+                        <div class="space-y-1.5">
+                            <label for="custEmail" class="block font-orbitron text-[11px] sm:text-xs font-bold text-yellow-400 tracking-wider">EMAIL ADDRESS *</label>
+                            <input type="email" id="custEmail" required placeholder="e.g. robin@aetherarcade.com" class="w-full bg-black/90 border border-gray-700 rounded-lg px-3.5 py-3 text-sm text-white focus:outline-none focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 transition-all">
+                        </div>
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label for="custPhone" class="block font-orbitron text-[11px] sm:text-xs font-bold text-yellow-400 tracking-wider">PHONE NUMBER *</label>
+                        <input type="tel" id="custPhone" required placeholder="+1 (555) 019-2834" class="w-full bg-black/90 border border-gray-700 rounded-lg px-3.5 py-3 text-sm text-white focus:outline-none focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 transition-all">
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label for="custMessage" class="block font-orbitron text-[11px] sm:text-xs font-bold text-yellow-400 tracking-wider">YOUR MESSAGE / FEEDBACK *</label>
+                        <textarea id="custMessage" rows="4" required placeholder="Type your detailed message here..." class="w-full bg-black/90 border border-gray-700 rounded-lg px-3.5 py-3 text-sm text-white focus:outline-none focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 transition-all"></textarea>
+                    </div>
+
+                    <button type="submit" class="touch-btn w-full clip-btn py-3.5 sm:py-4 bg-gradient-to-r from-red-600 via-yellow-500 to-red-600 text-black font-orbitron font-black text-xs sm:text-sm tracking-widest hover:brightness-125 transition-all shadow-neon-red flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span>SEND ENCRYPTED SIGNAL</span>
+                    </button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="relative z-10 bg-black border-t border-yellow-500/20 py-6 sm:py-8 text-center font-orbitron text-[10px] sm:text-xs text-gray-500">
+        <div class="max-w-7xl mx-auto px-4 space-y-3 sm:space-y-4">
+            <div class="flex justify-center space-x-6 text-yellow-400 text-lg sm:text-xl">
+                <a href="#" class="hover:text-red-500 transition-colors" aria-label="Discord"><i class="fa-brands fa-discord"></i></a>
+                <a href="#" class="hover:text-red-500 transition-colors" aria-label="Telegram"><i class="fa-brands fa-telegram"></i></a>
+                <a href="#" class="hover:text-red-500 transition-colors" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                <a href="#" class="hover:text-red-500 transition-colors" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+            </div>
+            <p>© 2026 AETHER ARCADE PORTAL. ALL RIGHTS RESERVED. MOBILE-OPTIMIZED ECOSYSTEM.</p>
+        </div>
+    </footer>
+
+    <script>
+        /* Interactive Mobile Drawer Toggle */
+        function toggleMobileDrawer() {
+            const drawer = document.getElementById('mobileDrawer');
+            const icon = document.getElementById('hamburgerIcon');
+            
+            const isClosed = drawer.classList.contains('-translate-y-full');
+            if (isClosed) {
+                drawer.classList.remove('-translate-y-full', 'pointer-events-none');
+                drawer.classList.add('translate-y-0');
+                icon.className = 'fa-solid fa-xmark text-xl';
+            } else {
+                drawer.classList.add('-translate-y-full', 'pointer-events-none');
+                drawer.classList.remove('translate-y-0');
+                icon.className = 'fa-solid fa-bars text-xl';
+            }
+        }
+
+        /* Tab Switcher & Mobile Menu Auto-Close */
+        function switchTab(tabId) {
+            const pages = document.querySelectorAll('.page-section');
+            pages.forEach(p => p.classList.add('hidden'));
+
+            const targetPage = document.getElementById(`page-${tabId}`);
+            if (targetPage) {
+                targetPage.classList.remove('hidden');
+            }
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => link.classList.remove('active'));
+
+            const activeBtn = document.getElementById(`nav-${tabId}`);
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+            }
+
+            // Close mobile drawer if open
+            const drawer = document.getElementById('mobileDrawer');
+            const icon = document.getElementById('hamburgerIcon');
+            if (drawer && !drawer.classList.contains('-translate-y-full')) {
+                drawer.classList.add('-translate-y-full', 'pointer-events-none');
+                drawer.classList.remove('translate-y-0');
+                if (icon) icon.className = 'fa-solid fa-bars text-xl';
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        /* Form Submission Handler */
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const alertBox = document.getElementById('contactSuccessMsg');
+            alertBox.classList.remove('hidden');
+            document.getElementById('customerContactForm').reset();
+            alertBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        /* Responsive Particle Grid Canvas Engine */
+        window.onload = function() {
+            const canvas = document.getElementById('motionCanvas');
+            const ctx = canvas.getContext('2d');
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            // Scale particle density for smaller screen performance
+            const isMobile = window.innerWidth < 768;
+            const particleCount = isMobile ? 35 : 70;
+            const particles = [];
+
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radius: Math.random() * 2 + 1,
+                    color: Math.random() > 0.4 ? '#FFD700' : '#FF1E27',
+                    vx: (Math.random() - 0.5) * 1.2,
+                    vy: (Math.random() - 0.5) * 1.2,
+                    pulse: Math.random() * Math.PI
+                });
+            }
+
+            function animateMotionCanvas() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                const maxDist = isMobile ? 100 : 140;
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+
+                        if (dist < maxDist) {
+                            ctx.beginPath();
+                            ctx.strokeStyle = (i % 2 === 0) 
+                                ? `rgba(255, 30, 39, ${1 - dist / maxDist})` 
+                                : `rgba(255, 215, 0, ${0.7 - dist / maxDist})`;
+                            ctx.lineWidth = 0.7;
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+
+                particles.forEach(p => {
+                    p.pulse += 0.04;
+                    const glowRadius = p.radius + Math.sin(p.pulse) * 1.0;
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, Math.max(0.5, glowRadius), 0, Math.PI * 2);
+                    ctx.fillStyle = p.color;
+                    ctx.shadowBlur = isMobile ? 6 : 10;
+                    ctx.shadowColor = p.color;
+                    ctx.fill();
+
+                    p.x += p.vx;
+                    p.y += p.vy;
+
+                    if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                    if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+                });
+
+                requestAnimationFrame(animateMotionCanvas);
+            }
+
+            animateMotionCanvas();
+
+            // Launch Audio Synthesizer
+            startEnergeticAudioSynth();
+        };
+
+        /* Web Audio API Background Synth Engine */
+        function startEnergeticAudioSynth() {
+            let audioCtx = null;
+            let isSynthRunning = false;
+
+            function initSynthEngine() {
+                if (isSynthRunning) return;
+
+                try {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    
+                    if (audioCtx.state === 'suspended') {
+                        audioCtx.resume();
+                    }
+
+                    const bpm = 132;
+                    const stepDuration = 60 / bpm / 4;
+                    let step = 0;
+
+                    const bassNotes = [55, 55, 65.41, 65.41, 49, 49, 58.27, 58.27]; 
+                    const leadNotes = [220, 261.63, 329.63, 392.00, 440, 523.25, 659.25, 783.99];
+
+                    setInterval(() => {
+                        if (!audioCtx) return;
+                        const now = audioCtx.currentTime;
+
+                        // 1. Kick Drum Pulse
+                        if (step % 4 === 0) {
+                            const kickOsc = audioCtx.createOscillator();
+                            const kickGain = audioCtx.createGain();
+                            kickOsc.frequency.setValueAtTime(140, now);
+                            kickOsc.frequency.exponentialRampToValueAtTime(35, now + 0.1);
+                            kickGain.gain.setValueAtTime(0.35, now);
+                            kickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+                            kickOsc.connect(kickGain);
+                            kickGain.connect(audioCtx.destination);
+                            kickOsc.start(now);
+                            kickOsc.stop(now + 0.1);
+                        }
+
+                        // 2. High-Energy Snare/Hi-Hat Click
+                        if (step % 4 === 2) {
+                            const hatOsc = audioCtx.createOscillator();
+                            const hatGain = audioCtx.createGain();
+                            hatOsc.type = 'triangle';
+                            hatOsc.frequency.setValueAtTime(750, now);
+                            hatGain.gain.setValueAtTime(0.06, now);
+                            hatGain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+                            hatOsc.connect(hatGain);
+                            hatGain.connect(audioCtx.destination);
+                            hatOsc.start(now);
+                            hatOsc.stop(now + 0.04);
+                        }
+
+                        // 3. Driving Sawtooth Bass
+                        if (step % 2 === 0) {
+                            const bassOsc = audioCtx.createOscillator();
+                            const bassGain = audioCtx.createGain();
+                            const bassFreq = bassNotes[Math.floor(step / 2) % bassNotes.length];
+
+                            bassOsc.type = 'sawtooth';
+                            bassOsc.frequency.setValueAtTime(bassFreq, now);
+
+                            bassGain.gain.setValueAtTime(0.06, now);
+                            bassGain.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
+
+                            bassOsc.connect(bassGain);
+                            bassGain.connect(audioCtx.destination);
+                            bassOsc.start(now);
+                            bassOsc.stop(now + 0.16);
+                        }
+
+                        // 4. Lead Synth Melody
+                        if (step % 4 === 0 || step === 3 || step === 7 || step === 11) {
+                            const leadOsc = audioCtx.createOscillator();
+                            const leadGain = audioCtx.createGain();
+                            const leadFreq = leadNotes[(step * 3) % leadNotes.length];
+
+                            leadOsc.type = 'square';
+                            leadOsc.frequency.setValueAtTime(leadFreq, now);
+
+                            leadGain.gain.setValueAtTime(0.03, now);
+                            leadGain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+
+                            leadOsc.connect(leadGain);
+                            leadGain.connect(audioCtx.destination);
+                            leadOsc.start(now);
+                            leadOsc.stop(now + 0.12);
+                        }
+
+                        step = (step + 1) % 16;
+                    }, stepDuration * 1000);
+
+                    isSynthRunning = true;
+                    const liveText = document.getElementById('audioLiveText');
+                    if (liveText) liveText.innerText = 'SYNTH BEAT ACTIVE';
+                } catch (err) {
+                    console.log('Audio Context waiting for initial user interaction...');
+                }
+            }
+
+            initSynthEngine();
+
+            const unlockTriggers = ['click', 'touchstart', 'mousemove', 'scroll', 'keydown'];
+            function unlockAudio() {
+                initSynthEngine();
+                unlockTriggers.forEach(evt => window.removeEventListener(evt, unlockAudio));
+            }
+            unlockTriggers.forEach(evt => window.addEventListener(evt, unlockAudio, { once: true }));
+        }
+    </script>
+</body>
+</html>
